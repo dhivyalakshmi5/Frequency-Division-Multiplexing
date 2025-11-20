@@ -32,23 +32,26 @@ clc;
 clear; 
 close;
 
-fs = 50000;
+fs = 60000;
 t = 0:1/fs:0.05;
 
-m1 = 1.7*sin(2*%pi*163*t);
-m2 = 1.8*sin(2*%pi*173*t);
-m3 = 1.9*sin(2*%pi*183*t);
-m4 = 2.0*sin(2*%pi*193*t);
-m5 = 2.1*sin(2*%pi*203*t);
-m6 = 2.2*sin(2*%pi*213*t);
+// Changed message signals (new amplitudes & frequencies)
+m1 = 1.2*sin(2*%pi*120*t);
+m2 = 1.4*sin(2*%pi*140*t);
+m3 = 1.6*sin(2*%pi*160*t);
+m4 = 1.8*sin(2*%pi*180*t);
+m5 = 2.0*sin(2*%pi*200*t);
+m6 = 2.2*sin(2*%pi*220*t);
 
-c1 = cos(2*%pi*2000*t);
-c2 = cos(2*%pi*4000*t);
-c3 = cos(2*%pi*6000*t);
-c4 = cos(2*%pi*8000*t);
-c5 = cos(2*%pi*10000*t);
-c6 = cos(2*%pi*12000*t);
+// Changed carrier signals (new carrier frequencies)
+c1 = cos(2*%pi*2500*t);
+c2 = cos(2*%pi*4500*t);
+c3 = cos(2*%pi*6500*t);
+c4 = cos(2*%pi*8500*t);
+c5 = cos(2*%pi*10500*t);
+c6 = cos(2*%pi*12500*t);
 
+// Modulation
 s1 = m1 .* c1;
 s2 = m2 .* c2;
 s3 = m3 .* c3;
@@ -56,8 +59,10 @@ s4 = m4 .* c4;
 s5 = m5 .* c5;
 s6 = m6 .* c6;
 
+// FDM signal
 fdm = s1 + s2 + s3 + s4 + s5 + s6;
 
+// Demodulation mixing
 r1 = fdm .* c1;
 r2 = fdm .* c2;
 r3 = fdm .* c3;
@@ -65,14 +70,16 @@ r4 = fdm .* c4;
 r5 = fdm .* c5;
 r6 = fdm .* c6;
 
-
-cutoff_hz = 400;
+// Changed cutoff frequency
+cutoff_hz = 500;
 norm_cutoff = cutoff_hz/(fs/2);
 
-M = 101; 
+M = 101;
 
-[h, w] = wfir('lp', M, [norm_cutoff, 0], 'hm', 0);  
+// Low pass filter
+[h, w] = wfir('lp', M, [norm_cutoff, 0], 'hm', 0);
 
+// Filtering
 d1 = conv(r1, h, 'same');
 d2 = conv(r2, h, 'same');
 d3 = conv(r3, h, 'same');
@@ -80,6 +87,7 @@ d4 = conv(r4, h, 'same');
 d5 = conv(r5, h, 'same');
 d6 = conv(r6, h, 'same');
 
+// Scaling
 d1 = 2 * d1;
 d2 = 2 * d2;
 d3 = 2 * d3;
@@ -87,6 +95,7 @@ d4 = 2 * d4;
 d5 = 2 * d5;
 d6 = 2 * d6;
 
+// Plots
 figure(1);
 subplot(3,2,1); plot(t,m1); title("Message 1");
 subplot(3,2,2); plot(t,m2); title("Message 2");
@@ -106,13 +115,13 @@ subplot(3,2,4); plot(t,d4); title("Demod 4");
 subplot(3,2,5); plot(t,d5); title("Demod 5");
 subplot(3,2,6); plot(t,d6); title("Demod 6");
 ```
-
 ## OUTPUT WAVEFORM
-<img width="610" height="460" alt="image" src="https://github.com/user-attachments/assets/f5083867-0b2b-4c6c-b26c-82758f2bcfc8" />
+<img width="753" height="592" alt="Screenshot 2025-11-20 180247" src="https://github.com/user-attachments/assets/396611ce-14b5-4164-9441-19b9042ad027" />
 
-<img width="610" height="460" alt="image" src="https://github.com/user-attachments/assets/a04f310f-8b82-4106-8c8b-6aff895e91a7" />
+<img width="1919" height="857" alt="Screenshot 2025-11-20 180416" src="https://github.com/user-attachments/assets/180c5069-2517-47db-892a-de97b585446e" />
 
-<img width="610" height="460" alt="image" src="https://github.com/user-attachments/assets/0e15cd7b-b241-4f25-9841-8af7b1e62a8d" />
+<img width="755" height="598" alt="Screenshot 2025-11-20 180314" src="https://github.com/user-attachments/assets/2f6f4295-d6c7-41d2-9da1-2f82ea1c997d" />
+
 
 ## CALCULATION
 
